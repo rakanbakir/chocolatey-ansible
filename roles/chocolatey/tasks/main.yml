@@ -1,0 +1,31 @@
+---
+- name: install Chocolatey.server package
+  win_chocolatey:
+    name: "chocolatey.server"
+    state: present
+
+- name: install the Win32-OpenSSH service
+  win_chocolatey:
+    name: openssh
+    package_params: /SSHServerFeature
+    state: present
+
+- name: Ensures .ssh dir exists
+  win_file: 
+    path: C:\Users\{{ ansible_user }}\.ssh
+    state: directory
+
+- name: Set up authorised key file
+  win_copy:
+    dest: C:\Users\{{ ansible_user }}\.ssh\authorized_keys
+    src: ~/.ssh/id_rsa.pub
+    create: yes
+    backup: yes
+
+- name: Copy sshd_config
+  win_copy:
+    src: sshd_config
+    dest: C:\ProgramData\ssh\sshd_config
+    backup: yes
+  notify: 
+    - restart sshd

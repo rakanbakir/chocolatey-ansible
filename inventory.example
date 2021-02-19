@@ -1,0 +1,2 @@
+[win]
+vm-win ansible_host=<PUT_YOUR_WINDOWS_IP_HERE>
